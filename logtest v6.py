@@ -23,8 +23,6 @@ async def on_message(message):
 async def on_message(message):
     if message.content == "^ping":
         await client.send_message(message.channel, "Pong!")
-    if message.content == "^josh":
-        await client.send_message(message.channel, "josh is a fgt")
     #-------------------------
     def get_channel(channels, channel_name):
         count = 0
