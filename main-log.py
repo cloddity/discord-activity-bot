@@ -105,11 +105,7 @@ async def on_message(message):
         #await client.edit_message(mesg, '{} has {} messages in #{}.'.format(message.author, str(counter), gambling))
         
 
-#Xclient.run("MjA2ODgxMzUwNTEzNDU5MjEw.DqXAyg.kw9LJTnqfxW4RWjfnbCkn6sX7fw")
 client.run("MjA2ODgxMzUwNTEzNDU5MjEw.Dt0nmA.jpMAqpRpNGOfhKWaGGB8C0jj2N0")
-#client.run("NTE2NDc2MzAxMjcyNjc4NDI0.Dt0OSA.YyuxgPfNDMZ74krs7EllFp7AZsY")
-#client.run("NTE2NDc2MzAxMjcyNjc4NDI0.DuEiLQ.biODcBFYNKSzK0EGudyLNREsC0k")
 
-#if m == 1 and d == 31 and y != 2018 and flag = True:
 
 
