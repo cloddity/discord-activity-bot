@@ -4,6 +4,7 @@ from discord.ext import commands
 import asyncio
 import time
 from datetime import datetime, date, time
+import os
 
 Client = discord.Client()
 client = commands.Bot(command_prefix = "^")
