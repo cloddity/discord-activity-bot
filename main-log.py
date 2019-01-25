@@ -104,8 +104,9 @@ async def on_message(message):
                 y += 1
                 flag = False
         #await client.edit_message(mesg, '{} has {} messages in #{}.'.format(message.author, str(counter), gambling))
-        
 
+print("Hello")
+print(os.environ.get("TOKEN"))
 client.run(os.environ.get("TOKEN"))
 
 
