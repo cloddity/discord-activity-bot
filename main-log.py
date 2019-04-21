@@ -22,8 +22,8 @@ async def on_message(message):
     board = [0, 0, 0, 0, 0, 0, 0, 0, 0]
     show = ""
     blank = ":white_small_square:"
-    os = ":stuck_out_tongue_winking_eye:"
-    xs = ":pensive:"
+    os = ":o:"
+    xs = ":x:"
     turncount = 1
 
     def move(num, turn):
