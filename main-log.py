@@ -88,46 +88,46 @@ async def on_message(message):
                     await client.send_message(message.channel, "Use 1-9 to place Os/Xs.")
                     show = display()
                     await client.send_message(message.channel, show)
-                response = await client.wait_for_message()
-                while ((response.author != main and response.author != opponent) or representsInt(response.content) or (
-                        int(response.content) < 1 or int(response.content) > 9)):
                     response = await client.wait_for_message()
-                if (response.author == main):
-                    playera = main
-                    playerb = opponent
-                else:
-                    playera = opponent
-                    playerb = main
-                move(int(response.content), turn)
-                turn *= -1
-                show = display()
-                await client.send_message(message.channel, show)
-                while (turncount < 9):
-                    response = await client.wait_for_message()
-                    if (turn == 1):
-                        while ((response.author != playera) or representsInt(response.content) or (
-                                int(response.content) < 1 or int(response.content) > 9) or invalid(
-                                int(response.content))):
-                            response = await client.wait_for_message()
-                    elif (turn == -1):
-                        while ((response.author != playerb) or representsInt(response.content) or (
-                                int(response.content) < 1 or int(response.content) > 9) or invalid(
-                                int(response.content))):
-                            response = await client.wait_for_message()
+                    while ((response.author != main and response.author != opponent) or representsInt(response.content) or (
+                            int(response.content) < 1 or int(response.content) > 9)):
+                        response = await client.wait_for_message()
+                    if (response.author == main):
+                        playera = main
+                        playerb = opponent
+                    else:
+                        playera = opponent
+                        playerb = main
                     move(int(response.content), turn)
                     turn *= -1
                     show = display()
                     await client.send_message(message.channel, show)
-                    turncount += 1
-                    if (board[0] == board[1] == board[2] != 0 or board[3] == board[4] == board[5] != 0 or board[6] ==
-                            board[7] == board[8] != 0 or board[0] == board[3] == board[6] != 0 or board[1] == board[
-                                4] == board[7] != 0 or board[2] == board[5] == board[8] != 0 or board[0] == board[4] ==
-                            board[8] != 0 or board[2] == board[4] == board[6] != 0):
-                        await client.send_message(message.channel, "**" + response.author.nick + " wins!**")
-                        check = False
-                        break
-                if (turncount == 9 and check):
-                    await client.send_message(message.channel, "**Draw!**")
+                    while (turncount < 9):
+                        response = await client.wait_for_message()
+                        if (turn == 1):
+                            while ((response.author != playera) or representsInt(response.content) or (
+                                    int(response.content) < 1 or int(response.content) > 9) or invalid(
+                                    int(response.content))):
+                                response = await client.wait_for_message()
+                        elif (turn == -1):
+                            while ((response.author != playerb) or representsInt(response.content) or (
+                                    int(response.content) < 1 or int(response.content) > 9) or invalid(
+                                    int(response.content))):
+                                response = await client.wait_for_message()
+                        move(int(response.content), turn)
+                        turn *= -1
+                        show = display()
+                        await client.send_message(message.channel, show)
+                        turncount += 1
+                        if (board[0] == board[1] == board[2] != 0 or board[3] == board[4] == board[5] != 0 or board[6] ==
+                                board[7] == board[8] != 0 or board[0] == board[3] == board[6] != 0 or board[1] == board[
+                                    4] == board[7] != 0 or board[2] == board[5] == board[8] != 0 or board[0] == board[4] ==
+                                board[8] != 0 or board[2] == board[4] == board[6] != 0):
+                            await client.send_message(message.channel, "**" + response.author.nick + " wins!**")
+                            check = False
+                            break
+                    if (turncount == 9 and check):
+                        await client.send_message(message.channel, "**Draw!**")
 
         # temp = message.content.split(" ", 1)
         # await client.send_message(message.channel, temp[1].id)
