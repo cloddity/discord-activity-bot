@@ -73,6 +73,7 @@ async def on_message(message):
     if message.content.startswith("^play"):
         main = message.author
         turn = 1
+        check = True
         if (message.mentions.__len__() > 0):
             for user in message.mentions:
                 opponent = user
@@ -123,8 +124,9 @@ async def on_message(message):
                                 4] == board[7] != 0 or board[2] == board[5] == board[8] != 0 or board[0] == board[4] ==
                             board[8] != 0 or board[2] == board[4] == board[6] != 0):
                         await client.send_message(message.channel, "**" + response.author.nick + " wins!**")
+                        check = False
                         break
-                if (turncount == 9):
+                if (turncount == 9 and check):
                     await client.send_message(message.channel, "**Draw!**")
 
         # temp = message.content.split(" ", 1)
