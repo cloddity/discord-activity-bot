@@ -9,6 +9,7 @@ import os
 Client = discord.Client()
 client = commands.Bot(command_prefix="^")
 
+
 @client.event
 async def on_ready():
     print("Bot is ready!")
@@ -18,7 +19,117 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    board = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+    board = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    show = ""
+    blank = ":white_small_square:"
+    os = ":o:"
+    xs = ":x:"
+    turncount = 1
+
+    def move(num, turn):
+        if turn > 0:
+            board[num - 1] = 1
+        elif turn < 0:
+            board[num - 1] = 2
+
+    def display():
+        show = ""
+        newline = 0
+        for x in board:
+            if x == 0:
+                show += blank
+            if x == 1:
+                show += os
+            if x == 2:
+                show += xs
+            if newline == 2:
+                show += "\n"
+                newline = -1
+            newline += 1
+        return show
+
+    def invalid(num):
+        if (board[num - 1] > 0):
+            return True
+        else:
+            return False
+
+    def representsInt(s):
+        try:
+            int(s)
+            return False
+        except ValueError:
+            return True
+
+    if message.content.startswith("^redefine"):
+        temp = message.content.split(" ", 2)
+        if ((temp[1] == "O" or temp[1] == "o") and temp[2].startswith(":")):
+            os = temp[2]
+            await client.send_message(message.channel, ":thumbsup:")
+        elif ((temp[1] == "X" or temp[1] == "x") and temp[2].startswith(":")):
+            xs = temp[2]
+            await client.send_message(message.channel, ":thumbsup:")
+
+    if message.content.startswith("^play"):
+        main = message.author
+        turn = 1
+        if (message.mentions.__len__() > 0):
+            for user in message.mentions:
+                opponent = user
+                await client.send_message(message.channel,
+                                          opponent.mention + " " + main.nick + " wishes to challenge you! Do you accept?\n`(Y/N)`")
+                response = await client.wait_for_message(author=opponent, timeout=60)
+                while (response.content != "Y" and response.content != "y" and response.content != "N" and response.content != "n"):
+                    response = await client.wait_for_message(author=opponent, timeout=60)
+                if response.content == ("n") or response.content == ("N"):
+                    await client.send_message(message.channel, "Game declined.")
+                elif response.content == ("y") or response.content == ("Y"):
+                    await client.send_message(message.channel, "Use 1-9 to place Os/Xs.")
+                    show = display()
+                    await client.send_message(message.channel, show)
+                response = await client.wait_for_message()
+                while ((response.author != main and response.author != opponent) or representsInt(response.content) or (
+                        int(response.content) < 1 or int(response.content) > 9)):
+                    response = await client.wait_for_message()
+                if (response.author == main):
+                    playera = main
+                    playerb = opponent
+                else:
+                    playera = opponent
+                    playerb = main
+                move(int(response.content), turn)
+                turn *= -1
+                show = display()
+                await client.send_message(message.channel, show)
+                while (turncount < 9):
+                    response = await client.wait_for_message()
+                    if (turn == 1):
+                        while ((response.author != playera) or representsInt(response.content) or (
+                                int(response.content) < 1 or int(response.content) > 9) or invalid(
+                                int(response.content))):
+                            response = await client.wait_for_message()
+                    elif (turn == -1):
+                        while ((response.author != playerb) or representsInt(response.content) or (
+                                int(response.content) < 1 or int(response.content) > 9) or invalid(
+                                int(response.content))):
+                            response = await client.wait_for_message()
+                    move(int(response.content), turn)
+                    turn *= -1
+                    show = display()
+                    await client.send_message(message.channel, show)
+                    turncount += 1
+                    if (board[0] == board[1] == board[2] != 0 or board[3] == board[4] == board[5] != 0 or board[6] ==
+                            board[7] == board[8] != 0 or board[0] == board[3] == board[6] != 0 or board[1] == board[
+                                4] == board[7] != 0 or board[2] == board[5] == board[8] != 0 or board[0] == board[4] ==
+                            board[8] != 0 or board[2] == board[4] == board[6] != 0):
+                        await client.send_message(message.channel, "**" + response.author.nick + " wins!**")
+                        break
+                if (turncount == 9):
+                    await client.send_message(message.channel, "**Draw!**")
+
+        # temp = message.content.split(" ", 1)
+        # await client.send_message(message.channel, temp[1].id)
+        # await client.send_message(message.channel, message.author.nick)
 
     if message.content.startswith("^engrish") or message.content.startswith("^er"):
         temp = message.content.split(" ", 1)
@@ -42,26 +153,8 @@ async def on_message(message):
         await client.send_message(message.channel, string)
     if message.content == "^triangle":
         await client.send_message(message.channel, "▲")
-    if message.content.startswith("^test"):
-        main = message.author
-        turn = 1
-        if (message.mentions.__len__() > 0):
-            for user in message.mentions:
-                opponent = user
-                await client.send_message(message.channel, "1")
-                response = await client.wait_for_message(author=opponent, timeout=60)
-                if response.content.startswith("^decline"):
-                    await client.send_message(message.channel, "Game declined.")
-                # elif response.content.startswith("^accept"):
+        # -------------------------
 
-        # temp = message.content.split(" ", 1)
-        # await client.send_message(message.channel, temp[1].id)
-        # await client.send_message(message.channel, message.author.nick)
-
-    if message.content == "^ping":
-        await client.send_message(message.channel, "Pong!")
-
-    # -------------------------
     def get_channel(channels, channel_name):
         count = 0
         for channel in client.get_all_channels():
@@ -70,6 +163,7 @@ async def on_message(message):
                     return channel
         count += 1
         return message.channel
+
     # -------------------------
     arr = [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]]
 
@@ -143,6 +237,3 @@ async def on_message(message):
         # await client.edit_message(mesg, '{} has {} messages in #{}.'.format(message.author, str(counter), gambling))
 
 client.run(os.environ.get("TOKEN"))
-
-
-
